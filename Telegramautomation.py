@@ -51,11 +51,11 @@ def preProcess_collected_data(chat_id, TELEGRAM_TOKEN, API_URL):
         TimeIndicatorList.append(str(datetime.now()))
         ValuesList.append(NewInput)
         
-        if len(TimeIndicatorList) == len(ValuesList) and len(ValuesList) == 4:
+        if len(TimeIndicatorList) == len(ValuesList) and len(ValuesList) == 20:
             # Verify if values are descending or  not and continue the process 
             print({"LogInfo":"We get for the first time the desired level to continue the verification process in this level !"})
             
-        elif len(TimeIndicatorList) == len(ValuesList) and len(ValuesList) > 4: 
+        elif len(TimeIndicatorList) == len(ValuesList) and len(ValuesList) > 20: 
             # Use the FIFO methode to garantie the data shape equals 20
             TimeIndicatorList = TimeIndicatorList[1:]
             ValuesList = ValuesList[1:]
@@ -67,7 +67,7 @@ def preProcess_collected_data(chat_id, TELEGRAM_TOKEN, API_URL):
             continue
         
         # continue the process after preparing data and limiting it's lenght on 20 elements 
-        assert len(ValuesList) == 4, 'Only lists with a length of 20 are accepted for processing.'
+        assert len(ValuesList) == 20, 'Only lists with a length of 20 are accepted for processing.'
         InputValuesDict = dict(zip(TimeIndicatorList, ValuesList))
         
         values = list(InputValuesDict.values())
