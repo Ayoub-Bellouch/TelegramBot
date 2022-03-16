@@ -11,7 +11,12 @@ Telegram Automation Part1 - bot for individual chat :
     Open a new tab with your browser, enter https://api.telegram.org/bot/getUpdates , replace with your API token, press enter to run https://api.telegram.org/bot5121400289:AAHRZKx2voyY3HSfHJi2bgsLdHqnKB_WpcY/getUpdates
     Done! Congratulations on your new bot. You will find it at t.me/NotifCall_bot. You can now add a description, about section and profile picture for your bot, see /help for a list of commands. By the way, when you've finished creating your cool bot, ping our Bot Support if you want a better username for it. Just make sure the bot is fully operational before you do this.
 
-Telegram Automation Part2 - bot for groupe chat :
+Telegram Automation Part2 - bot for groupe chat - Simulation Caractère Stocker en temp réel :
+
+    After creating the bot using instruction in the top of this page, then:
+    Add the bot to the group: Go to the group, click on group name, click on Add members, in the searchbox search for your bot like this: @my_bot, select your bot and click add.
+    open the group chat in a browser, you will see an URL in this format: "https://web.telegram.org/z/#-783940739" a negative number occurs in the link, that is the chat_ID of the groupe that we can use to send our messages:
+    we consider chat_id = -783940739, then we can use the telegram_bot_sendtext method to do the necessary to send notifs.
 
 
 Install requarements using :
