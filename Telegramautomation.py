@@ -35,9 +35,7 @@ def sending_telegram_notification(data_delivery, chat_id, TELEGRAM_TOKEN, API_UR
         # df = pd.DataFrame(ar, index = [' ', ' ', ' '], columns = ['  ', '  ', '  ', '  ', ' ', ''])
         # chreno_to_stop = df.to_string()
         # print("chreno_to_stop : ", chreno_to_stop)
-        
-        
-        
+
         bot_message = """{} \n {} \n\n {} """.format(msg_entete, chreno_to_stop, estimated_date_of_stop_str)        
         # print("bot_message : \n ", bot_message)
 
@@ -65,7 +63,7 @@ def preProcess_collected_data(chat_id, TELEGRAM_TOKEN, API_URL):
     while True:
         # verify inputs type & methode || ensure that the input value is in the correct format 
         testInput = 0
-        while testInput == 0: 
+        while testInput == 0:
             try:
                 NewInput = int(input("\n\n XxX _ Enter the exact {} - th value of a the Stocker Status Please ! = > ".format(counter+1)))
                 testInput = 1
@@ -73,7 +71,7 @@ def preProcess_collected_data(chat_id, TELEGRAM_TOKEN, API_URL):
             except ValueError:
                 error_message = {"error": "XxX _ Log Error : the entred value is not valid !"}
                 print(error_message)
-        
+
         # assign all inputs to a list with a date entry specification in another list 
         TimeIndicatorList.append(str(datetime.now()).split('.')[0])
         ValuesList.append(NewInput)
