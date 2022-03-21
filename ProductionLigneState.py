@@ -18,7 +18,7 @@ def DataToString(dataFrame):
     for col in columns:
         if lengthColMax < len(col):
             lengthColMax = len(col)
-    # definire la langueur de la plus grande cellule :
+    # definire la langueur de la plus grande cellule:
     for index, row in dataFrame.iterrows():
         for col in columns:
             if lengthColMax < len(row[col]):
@@ -32,13 +32,19 @@ def DataToString(dataFrame):
     StringData = ''
     lenghDelta = 0
     
-    for col in columns:
+    for idx, col in enumerate(columns):
+        # Ajustement des Affichage -> chat Telegram 
+        # la valeur n et n_ est additionell pour garantir le bon affichage du message dans le chat Telegram 
+        n  = 12 # !Z le print normale bien structurer peut afficher apres l'ellimination de cette valeur :
+        n_ = 3
+        n__ = 1
+        
         additionalSpaces2 = 0
         lenghDelta = lengthColMax - len(col)
         additionalSpaces = lenghDelta//2+bool(lenghDelta % 2)
 
-        addedValue = additionalSpaces*" "+col+" "*additionalSpaces2
-
+        addedValue = (additionalSpaces+n_)*" "+col+" "*(additionalSpaces2+n_)
+        
     #     while len(addedValue) != lengthColMax:
         if len(addedValue) > lengthColMax:
             additionalSpaces2 = additionalSpaces - 1
@@ -48,16 +54,22 @@ def DataToString(dataFrame):
             additionalSpaces2 = additionalSpaces
 
             addedValue = additionalSpaces*" "+col+" "*additionalSpaces2
-
-        StringData += addedValue
+            
+        if idx == 0:
+            # Ajustement des Affichage -> chat Telegram  
+            # Replacer if else avec : StringData += addedValue
+            StringData += addedValue+n_*" "+"|"
+        else: 
+            StringData += addedValue
 #         print("Delta : ", lenghDelta, ' --> ', additionalSpaces, ' Total length: ', len(addedValue))
 #         print(StringData)
-
-    StringData += "\n"+(lengthColMax*len(columns)+2)*"-"+"\n"
-
+    
+    StringData += "\n"+(lengthColMax*len(columns)+2+n)*"-"+"\n"
+    
     for index, row in dataFrame.iterrows():
         lenghDelta = 0
-        for col in columns:
+        # Ajustement des Affichage -> chat Telegram 
+        for idx, col in enumerate(columns):
             lenghDelta = lengthColMax - len(row[col])
             additionalSpaces = lenghDelta//2+bool(lenghDelta % 2)
 
@@ -67,8 +79,10 @@ def DataToString(dataFrame):
                 additionalSpaces2 = additionalSpaces + 1
             else:
                 additionalSpaces2 = additionalSpaces
-
-            addedValue = additionalSpaces*" "+row[col]+" "*additionalSpaces2+"|"
+            if idx == 0:
+                addedValue = additionalSpaces*" "+row[col]+" "*additionalSpaces2+"|"
+            else: 
+                addedValue = additionalSpaces*" "+row[col]+" "*additionalSpaces2
             StringData += addedValue
 #             print("Delta : ", lenghDelta, ' --> ', additionalSpaces, ' Total length: ', len(addedValue))
 #             print(StringData)
