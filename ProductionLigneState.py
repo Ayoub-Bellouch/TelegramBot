@@ -76,46 +76,50 @@ def DataToString(dataFrame):
         StringData += "\n"
     return StringData
 
-
 def telegram_bot_sendtext(bot_message, TELEGRAM_TOKEN, chat_id):
     bot_token = TELEGRAM_TOKEN
     bot_chatID = chat_id
     send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
-    
+    message_info = {"LogInfo":bot_message}
+    print("LogInfo sended message : \n {}".format(message_info['LogInfo']))
     response = requests.get(send_text)
     return response.text
 
 import schedule
 import time
 
+def telegram_bot_sendtext(bot_message, TELEGRAM_TOKEN, chat_id):
+    bot_token = TELEGRAM_TOKEN
+    bot_chatID = chat_id
+    send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
+    message_info = {"LogInfo":bot_message}
+    print("LogInfo sended message : \n {}".format(message_info['LogInfo']))
+    response = requests.get(send_text)
+    return response.text
+
 def generate_data():
-    ar = np.array([["loader", random.randint(0,102)], ["CuttingCellNbr1",random.randint(0,882)], ["CuttingCellNbr2", random.randint(0,442)], ["CuttingCellNbr3", random.randint(400,1500)], ["FurnaceExit", random.randint(0,2222)]])
+    # lire la base de donnees dans ce niveau 
+    ar = np.array([["LoaderCutting", random.randint(0,102)], ["Cutting-Cell-1",random.randint(0,882)], ["Cutting-Cell-2", random.randint(0,442)], ["Cutting-Cell-3", random.randint(400,1500)], ["Furnace-Exit", random.randint(0,2222)]])
     df = pd.DataFrame(ar, index = [' ', ' ', ' ', '', ''], columns = [' name ', ' value '])
     msg_entete = "Recap du : "+str(datetime.now()).split('.')[0]+"\n"
     bot_message = msg_entete+"\n"+DataToString(df)
-    message_info = {"LogInfo":bot_message}
-    print("LogInfo : \n {}".format(message_info['LogInfo']))
     return bot_message
-
-def main(bot_message, TELEGRAM_TOKEN, chat_id):
-    schedule.every().day.at("00:00").do(telegram_bot_sendtext, bot_message, TELEGRAM_TOKEN, chat_id)
-    schedule.every().day.at("08:00").do(telegram_bot_sendtext, bot_message= bot_message, TELEGRAM_TOKEN= TELEGRAM_TOKEN, chat_id= chat_id)
-    schedule.every().day.at("16:00").do(telegram_bot_sendtext, bot_message= bot_message, TELEGRAM_TOKEN= TELEGRAM_TOKEN, chat_id= chat_id)
-    # Test runner :
-    schedule.every(5).seconds.do(telegram_bot_sendtext, bot_message, TELEGRAM_TOKEN, chat_id)
-    while True:
-        bot_message = generate_data()
-        schedule.run_pending()
-        time.sleep(1)
-
-
-TELEGRAM_TOKEN = '5121400289:AAHRZKx2voyY3HSfHJi2bgsLdHqnKB_WpcY'
-# Individual 
-# chat_id = '1104376640'
-# Groupe
-chat_id = '-783940739'
-bot_message = generate_data()
-
-if __name__ == '__main__':
     
-    main(bot_message, TELEGRAM_TOKEN, chat_id)
+def job_Runners():
+    # Test Runner:
+    bot_message = generate_data()
+    TELEGRAM_TOKEN = '5121400289:AAHRZKx2voyY3HSfHJi2bgsLdHqnKB_WpcY'
+    # Individual 
+    # chat_id = '1104376640'
+    # Groupe
+    chat_id = '-783940739'
+    telegram_bot_sendtext(bot_message, TELEGRAM_TOKEN, chat_id)
+    
+def main():
+    schedule.every(5).seconds.do(job_Runners)
+    while True:
+        schedule.run_pending()
+#         time.sleep(1)
+        
+if __name__ == '__main__':
+    main()
