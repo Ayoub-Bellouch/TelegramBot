@@ -1,6 +1,7 @@
 # File generation 
 from datetime import datetime,timedelta
 from os import path
+from time import sleep
 import pandas as pd
 import numpy as np
 import openpyxl
@@ -16,8 +17,8 @@ def telegram_bot_sendtext(bot_message, TELEGRAM_TOKEN, chat_id):
     return response
 
 
-def sending_telegram_notification(data_delivery, chat_id, TELEGRAM_TOKEN, API_URL):
-        msg_entete = "Recap du : "+str(datetime.now()).split('.')[0]
+def sending_telegram_notification(data_delivery, chat_id, TELEGRAM_TOKEN):
+        msg_entete = " --------------- 🛑 Warning ⚠ --------------- \n\n 📑 Recap du : "+str(datetime.now()).split('.')[0]+"\n"
         # Message with full data description:
         bot_message_data = data_delivery.to_string()
         
@@ -25,11 +26,11 @@ def sending_telegram_notification(data_delivery, chat_id, TELEGRAM_TOKEN, API_UR
         nbr_glass_on_stocker = list(data_delivery["Values"])[-1]
         time_to_stop_sec = 25 * nbr_glass_on_stocker
         splited_chreno = str(timedelta(seconds=time_to_stop_sec)).split(":")
-
-        estimated_date_of_stop_date = datetime.now() + timedelta(seconds = int(time_to_stop_sec))
-        estimated_date_of_stop_str  =  " 💢 Next Stop on:"+str(estimated_date_of_stop_date).split('.')[0]
         
-        chreno_to_stop = """     🛑 Warning ⚠ \n {} :  houuurs |\ \n {} : minutes | - > To Stop ! \n {} : seconds |/ """.format(splited_chreno[0], splited_chreno[1], splited_chreno[2])
+        estimated_date_of_stop_date = datetime.now() + timedelta(seconds = int(time_to_stop_sec))
+        estimated_date_of_stop_str  =  " 🚫 Next Stop: "+str(estimated_date_of_stop_date).split('.')[0]
+        
+        chreno_to_stop = """  {} :  houuurs |\ \n {} : minuutes | - > ⏳ To Stop  ! \n {} : seconds |/ """.format(splited_chreno[0], splited_chreno[1], splited_chreno[2])
         # Another way to avoid anotates eliminations
         # ar = np.array([[splited_chreno[0], " : ", "Heurs", "|\\", "", ""], [splited_chreno[1] ," : ", "Minutes ", " | ", " - - >", " To Stop 🛑 "], [splited_chreno[2], " : ", "Seconds", "|/", "", ""],])
         # df = pd.DataFrame(ar, index = [' ', ' ', ' '], columns = ['  ', '  ', '  ', '  ', ' ', ''])
@@ -53,8 +54,8 @@ def is_descending(list_):
         print({"LogInfo" : "the list values is not in a descending order !"})
         return False
     return is_descending(list_[1:])
-
-def preProcess_collected_data(chat_id, TELEGRAM_TOKEN, API_URL):
+    
+def preProcess_collected_data(chat_id, TELEGRAM_TOKEN):
     TimeIndicatorList = []
     ValuesList = []
     counter = 0
@@ -103,20 +104,19 @@ def preProcess_collected_data(chat_id, TELEGRAM_TOKEN, API_URL):
             data_delivery = pd.DataFrame.from_dict(data)
             print(data_delivery)
             print({"LogInfo":"Call the bot groupe, there is a work to do ! "})
-            sending_telegram_notification(data_delivery, chat_id, TELEGRAM_TOKEN, API_URL)
+            sending_telegram_notification(data_delivery, chat_id, TELEGRAM_TOKEN)
             # Sleep the process after sending the notification !
-            sleep(600)
+#             sleep(600)
         else:
             print({"LogInfo": "data input Nmbr : {} with the value : {}, no need for notification call, 👮: EverEverything's all right !".format(counter, NewInput)})
         counter += 1
-
+        
 def main():
     TELEGRAM_TOKEN = '5121400289:AAHRZKx2voyY3HSfHJi2bgsLdHqnKB_WpcY'
-    API_URL = f'https://api.telegram.org/bot{TELEGRAM_TOKEN}' + '/{method_name}'
 # # For a groupe of users grouped on a telegram groupe 
     chat_id = '-783940739'
     # Origin !
-    preProcess_collected_data(chat_id, TELEGRAM_TOKEN, API_URL)
+    preProcess_collected_data(chat_id, TELEGRAM_TOKEN)
     
 if __name__ == '__main__':
     main()
